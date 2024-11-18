@@ -1,10 +1,8 @@
 package model.builder;
-
 import model.Book;
 
 import java.time.LocalDate;
 
-//Design Pattern Creational
 public class BookBuilder {
     private Book book;
 
@@ -17,13 +15,13 @@ public class BookBuilder {
         return this;
     }
 
-    public BookBuilder setTitle(String title){
-        book.setTitle(title);
+    public BookBuilder setAuthor(String author){
+        book.setAuthor(author);
         return this;
     }
 
-    public BookBuilder setAuthor(String author){
-        book.setAuthor(author);
+    public BookBuilder setTitle(String title){
+        book.setTitle(title);
         return this;
     }
 

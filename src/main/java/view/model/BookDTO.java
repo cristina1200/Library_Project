@@ -6,7 +6,7 @@ import javafx.beans.property.StringProperty;
 public class BookDTO {
     private StringProperty author;
 
-    public void setAuthor(String author) {
+    public void setAuthor(String author){
         authorProperty().set(author);
     }
 

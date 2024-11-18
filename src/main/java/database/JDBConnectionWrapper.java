@@ -6,20 +6,28 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class JDBConnectionWrapper {
+
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static final String DB_URL = "jdbc:mysql://localhost/";
+
+    private static final String DB_URL = "jdbc:mysql://localhost/"; // 127.0.0.1
+
     private static final String USER = "root";
+
     private static final String PASSWORD = "4a5aetSG2004";
+
     private static final int TIMEOUT = 5;
 
     private Connection connection;
 
+
     public JDBConnectionWrapper(String schema){
+
         try {
             Class.forName(JDBC_DRIVER);
-            connection = DriverManager.getConnection(DB_URL + schema + "?allowMultiQueries=true", USER, PASSWORD);
+            connection = DriverManager.getConnection(DB_URL + schema + "?allowMultiQueries=true" , USER, PASSWORD);
             createTables();
-        } catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e)
+        {
             e.printStackTrace();
         } catch (SQLException e){
             e.printStackTrace();
@@ -31,12 +39,13 @@ public class JDBConnectionWrapper {
 
         String sql = "CREATE TABLE IF NOT EXISTS book(" +
                 " id bigint NOT NULL AUTO_INCREMENT," +
-                " author VARCHAR(500) NOT NULL," +
-                " title VARCHAR(500) NOT NULL," +
+                " author varchar(500) NOT NULL," +
+                " title varchar(500) NOT NULL," +
                 " publishedDate datetime DEFAULT NULL," +
                 " PRIMARY KEY(id)," +
                 " UNIQUE KEY id_UNIQUE(id)" +
                 ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
+
         statement.execute(sql);
     }
 
@@ -47,4 +56,5 @@ public class JDBConnectionWrapper {
     public Connection getConnection(){
         return connection;
     }
+
 }
