@@ -1,53 +1,63 @@
 import database.DatabaseConnectionFactory;
 import model.Book;
 import model.builder.BookBuilder;
-import repository.BookRepository;
-import repository.BookRepositoryMock;
-import repository.BookRepositoryMySQL;
-import service.BookService;
-import service.BookServiceImpl;
+import repository.book.BookRepository;
+import repository.book.BookRepositoryMySQL;
 
 import java.sql.Connection;
 import java.time.LocalDate;
 
 public class Main {
+
     public static void main(String[] args){
         System.out.println("Hello world!");
 
-        Book book = new BookBuilder()
-                .setTitle("Ion")
-                .setAuthor("Liviu Rebreanu")
-                .setPublishedDate(LocalDate.of(1910, 10, 20))
+//        Book book = new BookBuilder().setAuthor("Me")
+//                .setTitle("Harry Potter")
+//                .build();
+
+        Book book_fram = new BookBuilder()
+                .setTitle("Fram Ursul Polar")
+                .setAuthor("Cezar Petrescu")
+                .setPublishedDate(LocalDate.of(2010, 6, 2))
                 .build();
 
-        System.out.println(book);
-//
-//
-//        BookRepository bookRepository = new BookRepositoryMock();
-//
-//        bookRepository.save(book);
-//        bookRepository.save(new BookBuilder().setAuthor("Ioan Slavici").setTitle("Moara cu noroc").setPublishedDate(LocalDate.of(1950, 2, 10)).build());
-//        System.out.println(bookRepository.findAll());
-//        bookRepository.removeAll();
-//        System.out.println(bookRepository.findAll());
-
-
-
+        System.out.println(book_fram.getAuthor());
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(false).getConnection();
         BookRepository bookRepository = new BookRepositoryMySQL(connection);
-        BookService bookService = new BookServiceImpl(bookRepository);
+        //BookService bookService = new BookServiceImpl(bookRepository);
 
-        bookRepository.save(book);
+        bookRepository.save(book_fram);
+        //bookRepository.save(book_fram);
+
         System.out.println(bookRepository.findAll());
+        //System.out.println(bookRepository.findAll());
+
+//        System.out.println("=============NEW==============");
+//
+//
+//        Connection connection = DatabaseConnectionFactory.getConnectionWrapper(false).getConnection();
+//        BookRepository bookRepository = new BookRepositoryMySQL(connection);
+//        BookService bookService = new BookServiceImpl(bookRepository);
+//
+//        Book book_fram = new BookBuilder()
+//                .setTitle("Fram Ursul Polar")
+//                .setAuthor("Cezar Petrescu")
+//                .setPublishedDate(LocalDate.of(2010, 6, 2))
+//                .build();
+//        bookService.save(book_fram);
+//
+//        Book book = bookService.findById(1L);
+//
+//        System.out.println(book);
 
 
 
-        Book bookMoaraCuNoroc = new BookBuilder().setAuthor("\"', '', null); DROP TABLE book; -- \");").setTitle("Moara cu noroc").setPublishedDate(LocalDate.of(1950, 2, 10)).build();
-        bookRepository.save(bookMoaraCuNoroc);
-        System.out.println(bookRepository.findAll());
-        bookService.delete(bookMoaraCuNoroc);
-        bookService.delete(book);
-        System.out.println(bookService.findAll());
+
+
 
     }
 }
+
+
+

@@ -1,15 +1,14 @@
 package controller;
-//
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import mapper.BookMapper;
-import service.BookService;
+import service.book.BookService;
 import view.BookView;
 import view.model.BookDTO;
 import view.model.builder.BookDTOBuilder;
-
-//import java.awt.event.ActionEvent;
-//import java.beans.EventHandler;
 
 public class BookController {
     private final BookView bookView;
@@ -20,10 +19,11 @@ public class BookController {
         this.bookService = bookService;
 
         this.bookView.addSaveButtonListener(new SaveButtonListener());
+        this.bookView.addSelectionTableListener(new SelectionTableListener());
         this.bookView.addDeleteButtonListener(new DeleteButtonListener());
     }
 
-    private class SaveButtonListener implements EventHandler<ActionEvent> {
+    private class SaveButtonListener implements EventHandler<ActionEvent>{
 
         @Override
         public void handle(ActionEvent event) {
@@ -31,18 +31,28 @@ public class BookController {
             String author = bookView.getAuthor();
 
             if (title.isEmpty() || author.isEmpty()){
-                bookView.addDisplayAlertMessage("Save Error", "Problem at Author or Title fields", "Can not have an empty Title or Author field.");
+                bookView.displayAlertMessage("Save Error", "Problem at Title or Author fields", "Can not have empty Author or Title fields. Please fill in the fields before submitting Save!");
+                bookView.getBooksObservableList().get(0).setTitle("No Name");
             } else {
-                BookDTO bookDTO = new BookDTOBuilder().setTitle(title).setAuthor(author).build();
+                BookDTO bookDTO = new BookDTOBuilder().setAuthor(author).setTitle(title).build();
                 boolean savedBook = bookService.save(BookMapper.convertBookDTOToBook(bookDTO));
 
-                if (savedBook){
-                    bookView.addDisplayAlertMessage("Save Successful", "Book Added", "Book was successfully added to the database.");
+                if (savedBook) {
+                    bookView.displayAlertMessage("Save Successful", "Book Added", "Book was successfully added to the database.");
                     bookView.addBookToObservableList(bookDTO);
                 } else {
-                    bookView.addDisplayAlertMessage("Save Error", "Problem at adding Book", "There was a problem at adding the book to the database. Please try again!");
+                    bookView.displayAlertMessage("Save Not Successful", "Book was not added", "There was a problem at adding the book into the database.");
                 }
             }
+        }
+    }
+
+    private class SelectionTableListener implements ChangeListener{
+
+        @Override
+        public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+            BookDTO selectedBookDTO = (BookDTO) newValue;
+            System.out.println("Book Author: " + selectedBookDTO.getAuthor() + " Title: " + selectedBookDTO.getTitle());
         }
     }
 
@@ -52,17 +62,16 @@ public class BookController {
         public void handle(ActionEvent event) {
             BookDTO bookDTO = (BookDTO) bookView.getBookTableView().getSelectionModel().getSelectedItem();
             if (bookDTO != null){
-                boolean deletionSuccessful = bookService.delete(BookMapper.convertBookDTOToBook(bookDTO));
-
-                if (deletionSuccessful){
-                    bookView.addDisplayAlertMessage("Delete Successful", "Book Deleted", "Book was successfully deleted from the database.");
+                boolean deletionSuccessfull = bookService.delete(BookMapper.convertBookDTOToBook(bookDTO));
+                if (deletionSuccessfull){
                     bookView.removeBookFromObservableList(bookDTO);
                 } else {
-                    bookView.addDisplayAlertMessage("Delete Error", "Problem at deleting book", "There was a problem with the database. Please try again!");
+                    bookView.displayAlertMessage("Deletion not successful", "Deletion Process", "There was a problem in the deletion process. Please restart the application and try again!");
                 }
             } else {
-                bookView.addDisplayAlertMessage("Delete Error", "Problem at deleting book", "You must select a book before pressing the delete button.");
+                bookView.displayAlertMessage("Deletion not successful", "Deletion Process", "You need to select a row from table before pressing the delete button!");
             }
         }
     }
+
 }
