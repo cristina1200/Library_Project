@@ -14,29 +14,34 @@ import view.model.BookDTO;
 
 import java.util.*;
 import java.sql.Connection;
-
 public class ComponentFactory {
-
     private final BookView bookView;
     private final BookController bookController;
     private final BookRepository bookRepository;
     private final BookService bookService;
-    private static ComponentFactory instance;
 
-    public static ComponentFactory getInstance(Boolean componentsForTest, Stage primaryStage){
-        if (instance == null) {
-            instance = new ComponentFactory(componentsForTest, primaryStage);
-        }
-        return instance;
-    }
+    private static volatile ComponentFactory instance;
 
-    public ComponentFactory(Boolean componentsForTest, Stage primaryStage){
+
+    private ComponentFactory(Boolean componentsForTest, Stage primaryStage) {
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(componentsForTest).getConnection();
         this.bookRepository = new BookRepositoryMySQL(connection);
         this.bookService = new BookServiceImpl(bookRepository);
         List<BookDTO> bookDTOs = BookMapper.convertBookListToBookDTOList(bookService.findAll());
         this.bookView = new BookView(primaryStage, bookDTOs);
         this.bookController = new BookController(bookView, bookService);
+    }
+
+
+    public static ComponentFactory getInstance(Boolean componentForTest, Stage primaryStage) {
+        if (instance == null) {
+            synchronized (ComponentFactory.class) {
+                if (instance == null) {
+                    instance = new ComponentFactory(componentForTest, primaryStage);
+                }
+            }
+        }
+        return instance;
     }
 
     public BookView getBookView() {
@@ -54,4 +59,5 @@ public class ComponentFactory {
     public BookService getBookService() {
         return bookService;
     }
+
 }

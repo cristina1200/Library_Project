@@ -50,7 +50,7 @@ public class UserValidator {
         if (password == null || password.trim().isEmpty()){
             return false;
         }
-        // black list
+        //
         Pattern specialCharactersPattern = Pattern.compile("[^A-Za-z0-9]");
         Matcher specialCharactersMatcher = specialCharactersPattern.matcher(password);
 

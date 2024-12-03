@@ -29,12 +29,20 @@ public class BookController {
         public void handle(ActionEvent event) {
             String title = bookView.getTitle();
             String author = bookView.getAuthor();
+            String price=bookView.getPrice();
+            String stock=bookView.getStock();
 
             if (title.isEmpty() || author.isEmpty()){
                 bookView.displayAlertMessage("Save Error", "Problem at Title or Author fields", "Can not have empty Author or Title fields. Please fill in the fields before submitting Save!");
                 bookView.getBooksObservableList().get(0).setTitle("No Name");
             } else {
-                BookDTO bookDTO = new BookDTOBuilder().setAuthor(author).setTitle(title).build();
+                BookDTO bookDTO = new BookDTOBuilder()
+                        .setAuthor(author)
+                        .setTitle(title)
+                        .setPrice(Double.parseDouble(price))  // Ensure price is a valid double
+                        .setStock(Long.parseLong(stock))  // Ensure stock is a valid long
+                        .build();
+
                 boolean savedBook = bookService.save(BookMapper.convertBookDTOToBook(bookDTO));
 
                 if (savedBook) {
@@ -52,7 +60,7 @@ public class BookController {
         @Override
         public void changed(ObservableValue observable, Object oldValue, Object newValue) {
             BookDTO selectedBookDTO = (BookDTO) newValue;
-            System.out.println("Book Author: " + selectedBookDTO.getAuthor() + " Title: " + selectedBookDTO.getTitle());
+            System.out.println("Book Author: " + selectedBookDTO.getAuthor() + " Title: " + selectedBookDTO.getTitle() + " Price: " + selectedBookDTO.getPrice() + " Stock: " + selectedBookDTO.getStock());
         }
     }
 

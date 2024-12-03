@@ -14,14 +14,12 @@ import static database.Constants.Roles.ROLES;
 import static database.Constants.Schemas.SCHEMAS;
 import static database.Constants.getRolesRights;
 
-// Script - code that automates some steps or processes
-
 public class Bootstrap {
 
     private static RightsRolesRepository rightsRolesRepository;
 
     public static void main(String[] args) throws SQLException {
-        dropAll();
+      //  dropAll();
 
         bootstrapTables();
 
@@ -36,14 +34,13 @@ public class Bootstrap {
             Statement statement = connection.createStatement();
 
             String[] dropStatements = {
-                    "TRUNCATE `role_right`;",
-                    "DROP TABLE `role_right`;",
-                    "TRUNCATE `right`;",
-                    "DROP TABLE `right`;",
-                    "TRUNCATE `user_role`;",
-                    "DROP TABLE `user_role`;",
-                    "TRUNCATE `role`;",
-                    "DROP TABLE  `book`, `role`, `user`;"
+                    "DROP TABLE IF EXISTS `role_right`;",
+                    "DROP TABLE IF EXISTS `user_role`;",
+                    "DROP TABLE IF EXISTS `right`;",
+                    "DROP TABLE IF EXISTS `role`;",
+                    "DROP TABLE IF EXISTS `user`;",
+                    "DROP TABLE IF EXISTS `sales`;",
+                    "DROP TABLE IF EXISTS `book`;"
             };
 
             Arrays.stream(dropStatements).forEach(dropStatement -> {

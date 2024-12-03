@@ -5,7 +5,7 @@ import model.Book;
 import java.util.List;
 import java.util.Optional;
 
-public class BookRepositoryCacheDecorator extends BookRepositoryDecorator{
+public class BookRepositoryCacheDecorator extends BookRepositoryDecorator {
     private Cache<Book> cache;
     public BookRepositoryCacheDecorator(BookRepository bookRepository, Cache<Book> cache){
         super(bookRepository);
@@ -53,5 +53,21 @@ public class BookRepositoryCacheDecorator extends BookRepositoryDecorator{
     public void removeAll() {
         cache.invalidateCache();
         decoratedBookRepository.removeAll();
+    }
+
+    @Override
+    public boolean updateStock(long id, int newStock) {
+        cache.invalidateCache();
+
+        boolean updated = decoratedBookRepository.updateStock(id, newStock);
+        if (updated && cache.hasResult()) {
+
+            cache.load()
+                    .stream()
+                    .filter(book -> book.getId().equals(id))
+                    .forEach(book -> book.setStock(newStock));
+        }
+
+        return updated;
     }
 }
