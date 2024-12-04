@@ -16,6 +16,7 @@ public class BookMapper {
                 .setTitle(book.getTitle())
                 .setAuthor(book.getAuthor())
                 .setPrice(book.getPrice())
+                .setStock(book.getStock())  //stock wasnt mapped and thats why it was not saving the value
                 .build();  }
 
     public static Book convertBookDTOToBook(BookDTO bookDTO){

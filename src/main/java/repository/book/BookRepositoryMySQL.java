@@ -90,8 +90,9 @@ public class BookRepositoryMySQL implements BookRepository {
                 preparedStatement.setNull(3, Types.DATE);
             }
 
-            preparedStatement.setLong(4, book.getStock());
-            preparedStatement.setDouble(5, book.getPrice());
+           // preparedStatement.setLong(4, book.getStock());
+            preparedStatement.setDouble(4, book.getPrice());
+            preparedStatement.setLong(5, book.getStock());
 
             int rowsInserted = preparedStatement.executeUpdate();
             System.out.println("Rows inserted: " + rowsInserted);
@@ -106,7 +107,7 @@ public class BookRepositoryMySQL implements BookRepository {
             }
 
             System.out.println("Saving book: " + book.getTitle() + ", " + book.getAuthor() + ", " +
-                    book.getPublishedDate() + ", " + book.getStock() + ", " + book.getPrice());
+                    book.getPublishedDate() + ", " + book.getPrice() + ", " + book.getStock());
 
             return rowsInserted > 0;
         } catch (SQLException e) {
@@ -161,15 +162,16 @@ public class BookRepositoryMySQL implements BookRepository {
             return false;
         }
     }
-
-    private Book getBookfromResultSet(ResultSet resultSet) throws SQLException
-    {
+    private Book getBookfromResultSet(ResultSet resultSet) throws SQLException {
         return new BookBuilder()
                 .setId(resultSet.getLong("id"))
                 .setTitle(resultSet.getString("title"))
                 .setAuthor(resultSet.getString("author"))
-                .setPublishedDate(new java.sql.Date(resultSet.getDate("publishedDate").getTime()).toLocalDate())
+                .setPublishedDate(resultSet.getDate("publishedDate") != null ? resultSet.getDate("publishedDate").toLocalDate() : null)
+                .setPrice(resultSet.getDouble("price"))
+                .setStock(resultSet.getLong("stock")) // Ensure this maps to the correct column
                 .build();
     }
+
 
 }
