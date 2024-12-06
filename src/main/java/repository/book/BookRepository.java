@@ -7,12 +7,12 @@ import java.util.Optional;
 
 public interface BookRepository
 {
-    List<Book> findAll();
+    List<Book> findAll(); //returneaza toate cartile
     Optional<Book> findById(Long id);
     boolean save (Book book);
     boolean delete (Book book);
     void removeAll();
-
+    boolean update(Book book);
     boolean updateStock (long id, int newStock);
 
 }

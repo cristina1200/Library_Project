@@ -4,45 +4,52 @@ import model.Book;
 import model.Sale;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SaleRepositoryMySQL implements SaleRepository {
-    private Connection connection;
+    public final Connection connection;
     public SaleRepositoryMySQL(Connection connection) {
         this.connection = connection;
     }
     @Override
-    public void save(Sale sale) {
-        String query = "INSERT INTO sales (book_id, sale_date, price) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setLong(1, sale.getBook().getId());
-            ps.setDate(2, Date.valueOf(sale.getSaleDate()));
-            ps.setDouble(3, sale.getPrice());
-            ps.executeUpdate();
+    public boolean save(Sale sale) {
+        String query = "INSERT INTO `orders` (book_title, quantity,seller_name, total_price, order_date) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, sale.getBookTitle());
+            preparedStatement.setInt(2, sale.getQuantity());
+            preparedStatement.setString(3, sale.getSellerName());
+            preparedStatement.setDouble(4, sale.getTotalPrice());
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(sale.getOrderDate()));
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
     @Override
     public List<Sale> findAll() {
+        String query = "SELECT * FROM `orders`";
         List<Sale> sales = new ArrayList<>();
-        String query = "SELECT * FROM sales";
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-            while (rs.next()) {
-                int bookId = rs.getInt("book_id");
-                LocalDate saleDate = rs.getDate("sale_date").toLocalDate();
-                double price = rs.getDouble("price");
 
-                Book book = new Book();
-                sales.add(new Sale(book, saleDate, price));
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                Sale sale = new Sale();
+                sale.setId(resultSet.getLong("id"));
+                sale.setBookTitle(resultSet.getString("book_title"));
+                sale.setQuantity(resultSet.getInt("quantity"));
+                sale.setSellerName(resultSet.getString("seller_name"));
+                sale.setTotalPrice(resultSet.getDouble("total_price"));
+                sale.setOrderDate(resultSet.getTimestamp("order_date").toLocalDateTime());
+                sales.add(sale);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return sales;
     }
 }

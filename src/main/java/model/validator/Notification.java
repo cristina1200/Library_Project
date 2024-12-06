@@ -2,9 +2,10 @@ package model.validator;
 
 import java.util.*;
 
+//T inseamna ca poate fi utilizat cu orice operatie ex user, book
 public class Notification<T>{
-    private T result;
-    private final List<String> errors;
+    private T result; //rezultatul operatiei
+    private final List<String> errors; //mesaj de eroare
 
     public Notification(){
         this.errors = new ArrayList<>();

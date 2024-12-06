@@ -34,6 +34,7 @@ public class JDBConnectionWrapper {
         }
     }
 
+    //se asigura ca exista tabelele
     private void createTables() throws SQLException {
         Statement statement = connection.createStatement();
 
@@ -51,6 +52,7 @@ public class JDBConnectionWrapper {
         statement.execute(sql);
     }
 
+    //verifica conexiunea cu baza de date
     public boolean testConnection() throws SQLException {
         return connection.isValid(TIMEOUT);
     }

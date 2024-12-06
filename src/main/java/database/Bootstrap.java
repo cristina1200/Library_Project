@@ -1,3 +1,4 @@
+
 package database;
 import repository.security.RightsRolesRepository;
 import repository.security.RightsRolesRepositoryMySQL;
@@ -21,11 +22,15 @@ public class Bootstrap {
     public static void main(String[] args) throws SQLException {
       //  dropAll();
 
+        //creaza toate tabelele
         bootstrapTables();
 
+        //populeaza tabelele
         bootstrapUserData();
     }
 
+    //da dropp la toate tabelele si le creeaza din nou
+    //joaca rol de reset
     private static void dropAll() throws SQLException {
         for (String schema : SCHEMAS) {
             System.out.println("Dropping all tables in schema: " + schema);
@@ -55,6 +60,8 @@ public class Bootstrap {
         System.out.println("Done table bootstrap");
     }
 
+
+    //asigura crearea tabelelor in ordinea corecta
     private static void bootstrapTables() throws SQLException {
         SQLTableCreationFactory sqlTableCreationFactory = new SQLTableCreationFactory();
 
@@ -76,6 +83,7 @@ public class Bootstrap {
         System.out.println("Done table bootstrap");
     }
 
+    //populeaza cu roles,rights si relatiile dintre ele
     private static void bootstrapUserData() throws SQLException {
         for (String schema : SCHEMAS) {
             System.out.println("Bootstrapping user data for " + schema);
@@ -90,18 +98,22 @@ public class Bootstrap {
         }
     }
 
+    //adauga rolurile predefinite
     private static void bootstrapRoles() throws SQLException {
         for (String role : ROLES) {
             rightsRolesRepository.addRole(role);
         }
     }
 
+
+//adauga drepturile predefinite
     private static void bootstrapRights() throws SQLException {
         for (String right : RIGHTS) {
             rightsRolesRepository.addRight(right);
         }
     }
 
+    //mapeaza rolurile si drepturile
     private static void bootstrapRoleRight() throws SQLException {
         Map<String, List<String>> rolesRights = getRolesRights();
 

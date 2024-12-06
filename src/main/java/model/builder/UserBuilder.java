@@ -4,6 +4,7 @@ import java.util.List;
 import model.Role;
 import model.User;
 
+//creeaza obiectul user
 public class UserBuilder {
 
     private User user;

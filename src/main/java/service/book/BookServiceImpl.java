@@ -23,9 +23,8 @@ public class BookServiceImpl implements BookService
     @Override
     public Book findById(Long id) {
         return bookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Book with id: %d was not found!".formatted(id)));
+                .orElseThrow(() -> new IllegalArgumentException("Book  was not found!"));
     }
-
     @Override
     public boolean save(Book book) {
         return bookRepository.save(book);
@@ -41,5 +40,9 @@ public class BookServiceImpl implements BookService
         Book book = this.findById(id);
         LocalDate now = LocalDate.now();
         return (int) ChronoUnit.YEARS.between(book.getPublishedDate(), now);
+    }
+    @Override
+    public boolean update (Book book) {
+        return bookRepository.update(book);
     }
 }

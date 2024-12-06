@@ -5,8 +5,11 @@ import model.Book;
 import java.util.List;
 import java.util.Optional;
 
+//adauga functionalitatea de caching
 public class BookRepositoryCacheDecorator extends BookRepositoryDecorator {
     private Cache<Book> cache;
+
+    //constructor
     public BookRepositoryCacheDecorator(BookRepository bookRepository, Cache<Book> cache){
         super(bookRepository);
         this.cache = cache;
@@ -69,5 +72,14 @@ public class BookRepositoryCacheDecorator extends BookRepositoryDecorator {
         }
 
         return updated;
+    }
+
+    @Override
+    public boolean update(Book book) {
+        boolean result = decoratedBookRepository.update(book);
+        if (result) {
+            cache.invalidateCache();
+        }
+        return result;
     }
 }

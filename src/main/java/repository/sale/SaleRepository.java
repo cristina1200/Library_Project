@@ -5,6 +5,6 @@ import model.Sale;
 import java.util.List;
 
 public interface SaleRepository {
-    void save (Sale sale);
+    boolean save (Sale sale);
     List<Sale> findAll();
 }

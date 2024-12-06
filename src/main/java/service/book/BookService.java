@@ -10,6 +10,7 @@ public interface BookService
     Book findById(Long id);
     boolean save (Book book);
     boolean delete (Book book);
+    boolean update (Book book);
 
     int getAgeOfBook (Long id);
 }

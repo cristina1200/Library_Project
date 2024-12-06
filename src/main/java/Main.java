@@ -3,6 +3,14 @@ import model.Book;
 import model.builder.BookBuilder;
 import repository.book.BookRepository;
 import repository.book.BookRepositoryMySQL;
+import repository.security.RightsRolesRepository;
+import repository.security.RightsRolesRepositoryMySQL;
+import repository.user.UserRepository;
+import repository.user.UserRepositoryMySQL;
+import service.book.BookService;
+import service.book.BookServiceImpl;
+import service.user.AuthenticationService;
+import service.user.AuthenticationServiceImpl;
 
 import java.sql.Connection;
 import java.time.LocalDate;
@@ -25,12 +33,14 @@ public class Main {
         System.out.println(book_fram.getAuthor());
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(false).getConnection();
         BookRepository bookRepository = new BookRepositoryMySQL(connection);
-        //BookService bookService = new BookServiceImpl(bookRepository);
+        BookService bookService = new BookServiceImpl(bookRepository);
 
-        bookRepository.save(book_fram);
-        //bookRepository.save(book_fram);
+        RightsRolesRepository rightsRolesRepository = new RightsRolesRepositoryMySQL(connection);
+        UserRepository userRepository = new UserRepositoryMySQL(connection, rightsRolesRepository);
+        AuthenticationService authenticationService = new AuthenticationServiceImpl(userRepository, rightsRolesRepository);
 
-        System.out.println(bookRepository.findAll());
+
+       // System.out.println(bookRepository.findAll());
         //System.out.println(bookRepository.findAll());
 
 //        System.out.println("=============NEW==============");
@@ -45,7 +55,7 @@ public class Main {
 //                .setAuthor("Cezar Petrescu")
 //                .setPublishedDate(LocalDate.of(2010, 6, 2))
 //                .build();
-//        bookService.save(book_fram);
+       // bookService.save(book);
 //
 //        Book book = bookService.findById(1L);
 //

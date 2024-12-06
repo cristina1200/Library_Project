@@ -1,4 +1,5 @@
 package launcher;
+
 import controller.LoginController;
 import database.DatabaseConnectionFactory;
 import javafx.stage.Stage;
@@ -24,6 +25,7 @@ public class LoginComponentFactory {
     private static Boolean componentsForTests;
     private static Stage stage;
 
+    //se asigura ca se creeaza o singura instanta -> SINGLETON
     public static LoginComponentFactory getInstance(Boolean aComponentsForTests, Stage aStage) {
         if (instance == null) {
             componentsForTests = aComponentsForTests;
@@ -34,7 +36,8 @@ public class LoginComponentFactory {
         return instance;
     }
 
-    public LoginComponentFactory(Boolean componentsForTests, Stage stage){
+
+    public LoginComponentFactory(Boolean componentsForTests, Stage stage) {
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(componentsForTests).getConnection();
         this.rightsRolesRepository = new RightsRolesRepositoryMySQL(connection);
         this.userRepository = new UserRepositoryMySQL(connection, rightsRolesRepository);
@@ -44,35 +47,35 @@ public class LoginComponentFactory {
         this.bookRepository = new BookRepositoryMySQL(connection);
     }
 
-    public static Stage getStage(){
+    public static Stage getStage() {
         return stage;
     }
 
-    public static Boolean getComponentsForTests(){
+    public static Boolean getComponentsForTests() {
         return componentsForTests;
     }
 
-    public AuthenticationService getAuthenticationService(){
+    public AuthenticationService getAuthenticationService() {
         return authenticationService;
     }
 
-    public UserRepository getUserRepository(){
+    public UserRepository getUserRepository() {
         return userRepository;
     }
 
-    public RightsRolesRepository getRightsRolesRepository(){
+    public RightsRolesRepository getRightsRolesRepository() {
         return rightsRolesRepository;
     }
 
-    public LoginView getLoginView(){
+    public LoginView getLoginView() {
         return loginView;
     }
 
-    public BookRepositoryMySQL getBookRepository(){
+    public BookRepositoryMySQL getBookRepository() {
         return bookRepository;
     }
 
-    public LoginController getLoginController(){
+    public LoginController getLoginController() {
         return loginController;
     }
 

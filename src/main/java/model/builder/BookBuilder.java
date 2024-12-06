@@ -5,7 +5,7 @@ import model.Book;
 import java.time.LocalDate;
 
 
-
+//creeaza obiectul carte
 public class BookBuilder
 {
     private Book book;

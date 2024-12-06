@@ -12,6 +12,7 @@ import java.security.MessageDigest;
 import java.util.Collections;
 
 import static database.Constants.Roles.CUSTOMER;
+import static database.Constants.Roles.EMPLOYEE;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -23,6 +24,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.rightsRolesRepository = rightsRolesRepository;
     }
 
+    //inregistreaza utilizatori noi si le atribuie direct rolul de client
     @Override
     public Notification<Boolean> register(String username, String password) {
 
@@ -34,12 +36,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .setRoles(Collections.singletonList(customerRole))
                 .build();
 
+        //verifica username-ul si parola
         UserValidator userValidator = new UserValidator(user);
 
         boolean userValid = userValidator.validate();
         Notification<Boolean> userRegisterNotification = new Notification<>();
 
-        if (!userValid){
+        if (!userValid) {
             userValidator.getErrors().forEach(userRegisterNotification::addError);
             userRegisterNotification.setResult(Boolean.FALSE);
         } else {
@@ -79,5 +82,37 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    //metoda pentru cand un administrator adauga un angajat nou
+    @Override
+    public Notification<Boolean> registerEmployee(String username, String password) {
+        if (userRepository.existsByUsername(username)) {
+            Notification<Boolean> userRegisterNotification = new Notification<>();
+            userRegisterNotification.setResult(Boolean.FALSE);
+            return userRegisterNotification;
+        }
+        Role role = rightsRolesRepository.findRoleByTitle(EMPLOYEE);
+
+        User user = new UserBuilder()
+                .setUsername(username)
+                .setPassword(password)
+                .setRoles(Collections.singletonList(role))
+                .build();
+
+        UserValidator userValidator = new UserValidator(user);
+
+        boolean userValid = userValidator.validate();
+        Notification<Boolean> userRegisterNotification = new Notification<>();
+
+        if (!userValid) {
+            userValidator.getErrors().forEach(userRegisterNotification::addError);
+            userRegisterNotification.setResult(Boolean.FALSE);
+        } else {
+            user.setPassword(hashPassword(password));
+            userRegisterNotification.setResult(userRepository.save(user));
+        }
+
+        return userRegisterNotification;
     }
 }

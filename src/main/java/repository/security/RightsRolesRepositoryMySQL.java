@@ -126,7 +126,7 @@ public class RightsRolesRepositoryMySQL implements RightsRolesRepository {
 
             return roles;
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
 
         return null;
