@@ -1,73 +1,36 @@
 import database.DatabaseConnectionFactory;
-import model.Book;
-import model.builder.BookBuilder;
-import repository.book.BookRepository;
-import repository.book.BookRepositoryMySQL;
-import repository.security.RightsRolesRepository;
-import repository.security.RightsRolesRepositoryMySQL;
-import repository.user.UserRepository;
-import repository.user.UserRepositoryMySQL;
-import service.book.BookService;
-import service.book.BookServiceImpl;
-import service.user.AuthenticationService;
-import service.user.AuthenticationServiceImpl;
+import model.Order;
+import repository.order.OrderRepository;
+import repository.order.OrderRepositoryMySQL;
+import service.order.OrderService;
+import service.order.OrderServiceImpl;
 
 import java.sql.Connection;
-import java.time.LocalDate;
+import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args){
-        System.out.println("Hello world!");
+    public static void main(String[] args) {
+        System.out.println("Debugging Orders Table...");
 
-//        Book book = new BookBuilder().setAuthor("Me")
-//                .setTitle("Harry Potter")
-//                .build();
-
-        Book book_fram = new BookBuilder()
-                .setTitle("Fram Ursul Polar")
-                .setAuthor("Cezar Petrescu")
-                .setPublishedDate(LocalDate.of(2010, 6, 2))
-                .build();
-
-        System.out.println(book_fram.getAuthor());
+        // Creăm conexiunea la baza de date
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(false).getConnection();
-        BookRepository bookRepository = new BookRepositoryMySQL(connection);
-        BookService bookService = new BookServiceImpl(bookRepository);
 
-        RightsRolesRepository rightsRolesRepository = new RightsRolesRepositoryMySQL(connection);
-        UserRepository userRepository = new UserRepositoryMySQL(connection, rightsRolesRepository);
-        AuthenticationService authenticationService = new AuthenticationServiceImpl(userRepository, rightsRolesRepository);
+        // Inițializăm repository-ul și service-ul pentru orders
+        OrderRepository orderRepository = new OrderRepositoryMySQL(connection);
+        OrderService orderService = new OrderServiceImpl(orderRepository);
 
+        // Apelăm metoda getOrders() și afișăm rezultatele
+        List<Order> orders = orderService.getOrders();
 
-       // System.out.println(bookRepository.findAll());
-        //System.out.println(bookRepository.findAll());
-
-//        System.out.println("=============NEW==============");
-//
-//
-//        Connection connection = DatabaseConnectionFactory.getConnectionWrapper(false).getConnection();
-//        BookRepository bookRepository = new BookRepositoryMySQL(connection);
-//        BookService bookService = new BookServiceImpl(bookRepository);
-//
-//        Book book_fram = new BookBuilder()
-//                .setTitle("Fram Ursul Polar")
-//                .setAuthor("Cezar Petrescu")
-//                .setPublishedDate(LocalDate.of(2010, 6, 2))
-//                .build();
-       // bookService.save(book);
-//
-//        Book book = bookService.findById(1L);
-//
-//        System.out.println(book);
-
-
-
-
-
-
+        // Verificăm dacă lista de comenzi este goală
+        if (orders.isEmpty()) {
+            System.out.println("No orders found in the database.");
+        } else {
+            System.out.println("Orders found in the database:");
+            for (Order order : orders) {
+                System.out.println(order);
+            }
+        }
     }
 }
-
-
-

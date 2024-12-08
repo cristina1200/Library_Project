@@ -45,7 +45,8 @@ public class Bootstrap {
                     "DROP TABLE IF EXISTS `role`;",
                     "DROP TABLE IF EXISTS `user`;",
                     "DROP TABLE IF EXISTS `sales`;",
-                    "DROP TABLE IF EXISTS `book`;"
+                    "DROP TABLE IF EXISTS `book`;",
+                    "DROP TABLE IF EXISTS `orders`;"
             };
 
             Arrays.stream(dropStatements).forEach(dropStatement -> {

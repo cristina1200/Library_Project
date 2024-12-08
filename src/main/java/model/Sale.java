@@ -6,15 +6,13 @@ import java.time.LocalDateTime;
 public class Sale {
     private Long id;
     private String bookTitle;
-    private String sellerName;
     private int quantity;
     private Double totalPrice;
     private LocalDateTime orderDate;
 
-    public Sale(Long id, String bookTitle, String sellerName, int quantity, Double totalPrice, LocalDateTime orderDate) {
+    public Sale(Long id, String bookTitle,  int quantity, Double totalPrice, LocalDateTime orderDate) {
         this.id = id;
         this.bookTitle = bookTitle;
-        this.sellerName = sellerName;
         this.quantity = quantity;
         this.totalPrice = totalPrice;
         this.orderDate = orderDate;
@@ -27,10 +25,6 @@ public class Sale {
 
     public String getBookTitle() {
         return bookTitle;
-    }
-
-    public String getSellerName() {
-        return sellerName;
     }
 
     public int getQuantity() {
@@ -53,10 +47,6 @@ public class Sale {
         this.bookTitle = bookTitle;
     }
 
-    public void setSellerName(String sellerName) {
-        this.sellerName = sellerName;
-    }
-
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
@@ -74,7 +64,6 @@ public class Sale {
         return "Sale{" +
                 "id=" + id +
                 ", bookTitle='" + bookTitle + '\'' +
-                ", sellerName='" + sellerName + '\'' +
                 ", quantity=" + quantity +
                 ", totalPrice=" + totalPrice +
                 ", orderDate=" + orderDate +

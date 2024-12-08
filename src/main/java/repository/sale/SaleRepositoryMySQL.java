@@ -14,13 +14,12 @@ public class SaleRepositoryMySQL implements SaleRepository {
     }
     @Override
     public boolean save(Sale sale) {
-        String query = "INSERT INTO `orders` (book_title, quantity,seller_name, total_price, order_date) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO `orders` (book_title, quantity, total_price, order_date) VALUES (?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, sale.getBookTitle());
             preparedStatement.setInt(2, sale.getQuantity());
-            preparedStatement.setString(3, sale.getSellerName());
-            preparedStatement.setDouble(4, sale.getTotalPrice());
-            preparedStatement.setTimestamp(5, Timestamp.valueOf(sale.getOrderDate()));
+            preparedStatement.setDouble(3, sale.getTotalPrice());
+            preparedStatement.setTimestamp(4, Timestamp.valueOf(sale.getOrderDate()));
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -41,7 +40,6 @@ public class SaleRepositoryMySQL implements SaleRepository {
                 sale.setId(resultSet.getLong("id"));
                 sale.setBookTitle(resultSet.getString("book_title"));
                 sale.setQuantity(resultSet.getInt("quantity"));
-                sale.setSellerName(resultSet.getString("seller_name"));
                 sale.setTotalPrice(resultSet.getDouble("total_price"));
                 sale.setOrderDate(resultSet.getTimestamp("order_date").toLocalDateTime());
                 sales.add(sale);

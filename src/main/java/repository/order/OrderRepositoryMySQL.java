@@ -30,7 +30,6 @@ public class OrderRepositoryMySQL implements OrderRepository{
                         resultSet.getInt("id"),
                         resultSet.getString("book_title"),
                         resultSet.getInt("quantity"),
-                        resultSet.getString("seller_name"),
                         resultSet.getDouble("total_price"),
                         resultSet.getTimestamp("order_date")
                 );

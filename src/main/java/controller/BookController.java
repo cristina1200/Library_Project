@@ -149,7 +149,7 @@ public class BookController {
                         refreshTableData();
                         if (success) {
                             //salvam comanda
-                            Sale sale = new Sale(null, title, CurrentUserService.getCurrentUsername(), quantity, totalPrice, LocalDateTime.now());
+                            Sale sale = new Sale(null, title, quantity, totalPrice, LocalDateTime.now());
                             boolean saleSaved = saleService.save(sale);
 
                             bookView.displayAlertMessage("Sale Successful", "Book Sold",

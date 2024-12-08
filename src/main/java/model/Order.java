@@ -6,16 +6,13 @@ public class Order {
     private int id;
     private String bookTitle;
     private int quantity;
-    private String sellerName;
-    ;
     private double totalPrice;
     private Timestamp orderDate;
 
-    public Order(int id, String bookTitle, int quantity, String sellerName, double totalPrice, Timestamp orderDate) {
+    public Order(int id, String bookTitle, int quantity,  double totalPrice, Timestamp orderDate) {
         this.id = id;
         this.bookTitle = bookTitle;
         this.quantity = quantity;
-        this.sellerName = sellerName;
         this.totalPrice = totalPrice;
         this.orderDate = orderDate;
     }
@@ -31,13 +28,6 @@ public class Order {
     }
     public void setBookTitle(String bookTitle) {
         this.bookTitle = bookTitle;
-    }
-    public String getSellerName() {
-        return sellerName;
-
-    }
-    public void setSellerName(String sellerName) {
-        this.sellerName = sellerName;
     }
     public int getQuantity() {
         return quantity;
@@ -64,7 +54,6 @@ public class Order {
                 "id=" + id +
                 ", bookTitle='" + bookTitle + '\'' +
                 ", quantity=" + quantity +
-                ", sellerName='" + sellerName + '\'' +
                 ", totalPrice=" + totalPrice +
                 ", orderDate=" + orderDate +
                 '}';
